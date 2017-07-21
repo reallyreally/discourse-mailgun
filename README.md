@@ -57,7 +57,7 @@ Give an example
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+Once the plugin is installed, you'll need to configure your Mailgun API key. You can do this in the plugin settings page.
 
 ## Built With
 
