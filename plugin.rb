@@ -21,17 +21,18 @@ after_initialize do
     before_filter :verify_signature
 
     def webhook
-      # creating a Hash with header name as key and everything else in an array
-      mg_headers = JSON.parse(params['message-headers']).map{|e| [e[0], e[1..-1]]}.to_h
-      mg_body    = params['body']
-      mg_id      = params['Message-Id']
+      mg_body    = params['body-plain']
+      mg_subj    = params['subject']
+      mg_to      = params['To']
+      mg_from    = params['From']
+      mg_date    = params['Date']
 
       m = Mail::Message.new do
-        to         mg_headers['To'].first
-        from       mg_headers['From'].first
-        date       mg_headers['Date'].first
-        message_id mg_id
-        body       mg_body
+        to      mg_to
+        from    mg_from
+        date    mg_date
+        subject mg_subj
+        body    mg_body
       end
 
       raw_email = m.to_s
