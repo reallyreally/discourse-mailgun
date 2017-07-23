@@ -7,11 +7,28 @@
 require 'openssl'
 
 after_initialize do
-
   module ::DiscourseMailgun
     class Engine < ::Rails::Engine
       engine_name "discourse-mailgun"
       isolate_namespace DiscourseMailgun
+
+      class << self
+        # signature verification filter
+        def verify_signature(timestamp, token, signature, api_key)
+          digest = OpenSSL::Digest::SHA256.new
+          data = [timestamp, token].join
+          hex = OpenSSL::HMAC.hexdigest(digest, api_key, data)
+
+          signature == hex
+        end
+
+        # posting the email through the discourse api
+        def post(url, params)
+          Excon.post(url,
+            :body => URI.encode_www_form(params),
+            :headers => { "Content-Type" => "application/x-www-form-urlencoded" })
+        end
+      end
     end
   end
 
@@ -20,7 +37,7 @@ after_initialize do
   class DiscourseMailgun::MailgunController < ::ApplicationController
     before_filter :verify_signature
 
-    def webhook
+    def incoming
       mg_body    = params['body-plain']
       mg_subj    = params['subject']
       mg_to      = params['To']
@@ -35,9 +52,14 @@ after_initialize do
         body    mg_body
       end
 
-      raw_email = m.to_s
+      handler_url = SiteSetting.discourse_base_url + "/admin/email/handle_mail"
 
-      render json: "done"
+      params = {'email'        => m.to_s,
+                'api_key'      => SiteSetting.discourse_api_key,
+                'api_username' => SiteSetting.discourse_api_username}
+      ::DiscourseMailgun::Engine.post(handler_url, params)
+
+      render plain: "done"
     end
 
     # we mark this controller as an API
@@ -46,21 +68,18 @@ after_initialize do
       true
     end
 
-    private 
+    private
 
-    # signature verification filter
     def verify_signature
-      digest = OpenSSL::Digest::SHA256.new
-      data = [params['timestamp'], params['token']].join
-      hex = OpenSSL::HMAC.hexdigest(digest, SiteSetting.mailgun_api_key, data)
-
-      render json: {}, :status => :unauthorized unless params['signature'] == hex
+      unless ::DiscourseMailgun::Engine.verify_signature(params['timestamp'], params['token'], params['signature'], SiteSetting.mailgun_api_key)
+        render json: {}, :status => :unauthorized
+      end
     end
   end
 
 
   DiscourseMailgun::Engine.routes.draw do
-    post "/webhook" => "mailgun#webhook"
+    post "/incoming" => "mailgun#incoming"
   end
 
   Discourse::Application.routes.append do

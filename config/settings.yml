@@ -2,3 +2,12 @@ plugins:
   mailgun_api_key:
     default: your_mailgun_api_key
     client: false
+  discourse_base_url:
+    default: https://some-url.com
+    client: false
+  discourse_api_key:
+    default: some-api-key
+    client: false
+  discourse_api_username:
+    default: api_username
+    client: false

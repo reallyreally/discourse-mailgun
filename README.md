@@ -14,50 +14,31 @@ Create a rule to forward email to this plugin
 
 ```
 match_recipient(“reply-.*@mydiscourse.domain”)
-forward(“https://mydiscourse.domain/admin/plugin/mailgun”)
+forward(“https://mydiscourse.domain/mailgun/incoming”)
 ```
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+Installing this plugin should be as simple as following the [Discourse Plugin installation tutorial](https://meta.discourse.org/t/install-a-plugin/19157)
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+In order to run tests you'll need a Discourse development environment such as the [vagrant](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md) one.
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+You can then run the tests with `rake plugin:spec[discourse-mailgun]`
 
 ## Deployment
 
-Once the plugin is installed, you'll need to configure your Mailgun API key. You can do this in the plugin settings page.
+Once the plugin is installed, you'll need to configure a few things:
+
+* Mailgun API key - which you can retrieve in your mailgun settings
+* Discourse Base URL - the URL where your discourse is available
+* Discourse API key - you can create one in the discourse admin panel
+* Discourse API username
+
+You can do this in the plugin settings page.
+
+You'll also need to enable "manual polling enabled" in your discourse email settings admin panel.
 
 ## Built With
 
@@ -71,20 +52,14 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/reallyreally/discourse-mailgun/tags). 
 
 ## Authors
 
-* **Author Name** - *Initial work* - [Company](https://really.ai/)
+* **Tiago Macedo** - *Initial work* - [Really Really Inc](https://really.ai/)
 
 See also the list of [contributors](https://github.com/reallyreally/discourse-mailgun/contributors) who participated in this project.
 
 ## License
 
 This project is licensed under the Apache 2.0 - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
