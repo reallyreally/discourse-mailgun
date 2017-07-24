@@ -40,6 +40,8 @@ You can do this in the plugin settings page.
 
 You'll also need to enable "manual polling enabled" in your discourse email settings admin panel.
 
+Once that is done, you need to configure Mailgun your mailgun routes to forward messages to `http://your-discourse-url/mailgun/incoming`
+
 ## Built With
 
 * [Atom](https://atom.io) - The editor used

@@ -6,6 +6,11 @@
 
 require 'openssl'
 
+enabled_site_setting :mailgun_api_key
+enabled_site_setting :discourse_base_url
+enabled_site_setting :discourse_api_key
+enabled_site_setting :discourse_api_username
+
 after_initialize do
   module ::DiscourseMailgun
     class Engine < ::Rails::Engine

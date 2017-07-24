@@ -1,0 +1,6 @@
+en:
+  site_settings:
+    mailgun_api_key: "Mailgun Secret API key used to verify message signatures."
+    discourse_base_url: "Base URL of your Discourse installation."
+    discourse_api_key: "Discourse API key."
+    discourse_api_username: "Discourse API username."
