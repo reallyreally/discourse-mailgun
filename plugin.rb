@@ -40,7 +40,7 @@ after_initialize do
   require_dependency "application_controller"
 
   class DiscourseMailgun::MailgunController < ::ApplicationController
-    before_filter :verify_signature
+    before_action :verify_signature
 
     def incoming
       mg_body    = params['body-plain']
