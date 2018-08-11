@@ -39,9 +39,8 @@ after_initialize do
 
   require_dependency "application_controller"
 
-  class DiscourseMailgun::MailgunController < ::ApplicationController
+  class DiscourseMailgun::MailgunController < ActionController::Base
     before_action :verify_signature
-    skip_before_action :redirect_to_login_if_required
 
     def incoming
       mg_body    = params['body-plain']
