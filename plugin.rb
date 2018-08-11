@@ -7,9 +7,6 @@
 require 'openssl'
 
 enabled_site_setting :mailgun_api_key
-enabled_site_setting :discourse_base_url
-enabled_site_setting :discourse_api_key
-enabled_site_setting :discourse_api_username
 
 after_initialize do
   module ::DiscourseMailgun
@@ -27,12 +24,6 @@ after_initialize do
           signature == hex
         end
 
-        # posting the email through the discourse api
-        def post(url, params)
-          Excon.post(url,
-            :body => URI.encode_www_form(params),
-            :headers => { "Content-Type" => "application/x-www-form-urlencoded" })
-        end
       end
     end
   end
@@ -57,13 +48,8 @@ after_initialize do
         body    mg_body
       end
 
-      handler_url = SiteSetting.discourse_base_url + "/admin/email/handle_mail"
-
-      params = {'email'        => m.to_s,
-                'api_key'      => SiteSetting.discourse_api_key,
-                'api_username' => SiteSetting.discourse_api_username}
-      ::DiscourseMailgun::Engine.post(handler_url, params)
-
+      Jobs.enqueue(:process_email, mail: m.to_s, retry_on_rate_limit: true)
+      
       render plain: "done"
     end
 
