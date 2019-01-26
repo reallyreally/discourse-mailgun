@@ -32,9 +32,6 @@ You can then run the tests with `rake plugin:spec[discourse-mailgun]`
 Once the plugin is installed, you'll need to configure a few things:
 
 * Mailgun API key - which you can retrieve in your mailgun settings
-* Discourse Base URL - the URL where your discourse is available
-* Discourse API key - you can create one in the discourse admin panel
-* Discourse API username
 
 You can do this in the plugin settings page.
 

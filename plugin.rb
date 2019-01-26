@@ -1,8 +1,8 @@
 # name: discourse-mailgun
 # about: Discourse Plugin for processing Mailgun webhooks
 # version: 0.1
-# authors: Tiago Macedo
-# url: https://github.com/reallyreally/discourse-mailgun
+# authors: Gavin Mogan
+# url: https://github.com/halkeye/discourse-mailgun
 
 require 'openssl'
 
@@ -49,7 +49,7 @@ after_initialize do
       end
 
       Jobs.enqueue(:process_email, mail: m.to_s, retry_on_rate_limit: true)
-      
+
       render plain: "done"
     end
 
